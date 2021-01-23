@@ -1,0 +1,1 @@
+module.exports = require("./dynamodb_access_layer/node_modules/dynamodb_access/index");
