@@ -1,7 +1,7 @@
 {
   "name": "lambda-layer-dynamodb-access-project",
   "version": "1.0.0",
-  "main": "servlerss.ts",
+  "main": "/dynamodb_access_layer/node_modules/dynamodb_access/index.js",
   "scripts": {
     "build": "npm ci && tsc",
     "test": "jest"
