@@ -4,7 +4,7 @@
   "main": "src/main/nodejs/index.ts",
   "scripts": {
     "build": "npm ci && tsc && npm run copy",
-    "copy": "copyfiles -f src/main/package.json dynamodb_access_layer/node_modules/dynamodb_access",
+    "copy": "copyfiles -f src/main/package.json dynamodb_access_layer/node_modules/dynamodb_access && cd dynamodb_access_layer/node_modules/dynamodb_access && npm i",
     "test": "jest"
   },
   "devDependencies": {
