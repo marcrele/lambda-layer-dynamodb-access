@@ -23,6 +23,12 @@ module.exports = {
       }],
       Projection: { ProjectionType: "ALL" },
       ProvisionedThroughput: { ReadCapacityUnits: 1, WriteCapacityUnits: 1 }
+    }, ],
+    data: [{
+      id: "111",
+      other: "222",
+      name: "first todo",
+      hello: "first",
     }]
   }],
   basePort: 8000
