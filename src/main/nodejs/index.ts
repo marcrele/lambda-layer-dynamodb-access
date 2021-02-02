@@ -1,5 +1,5 @@
 import * as AWS from "aws-sdk";
-import _ from "lodash";
+import * as _ from "lodash";
 
 const DEFAULT_LIMIT = 15;
 const isOffline = process.env.IS_OFFLINE;
@@ -19,8 +19,6 @@ const config = {
     secretAccessKey: "DEFAULT_SECRET",
   }),
 };
-
-console.log("initialize dynamodb with config:", config);
 
 const docClient = new AWS.DynamoDB.DocumentClient(config);
 
