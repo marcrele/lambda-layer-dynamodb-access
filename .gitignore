@@ -1,6 +1,7 @@
 # package directories
 jspm_packages
 node_modules
+dynamodb_access_layer
 
 # Serverless directories
 .serverless
