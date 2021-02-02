@@ -118,12 +118,13 @@ export const query = (
 export const update = (tableName: string, id: string, data: any) => {
   const updateExpressions = [];
   const expressionsValues: AWS.DynamoDB.DocumentClient.ExpressionAttributeValueMap = {};
+  const expressionsNames: AWS.DynamoDB.DocumentClient.ExpressionAttributeNameMap = {};
 
   for (const fieldName of Object.keys(data)) {
     const fieldValue = data[fieldName];
-    updateExpressions.push(`${fieldName} = :${fieldName}`);
-    const index = `:${fieldName}`;
-    expressionsValues[index] = fieldValue;
+    updateExpressions.push(`#${fieldName} = :${fieldName}`);
+    expressionsValues[`:${fieldName}`] = fieldValue;
+    expressionsNames[`#${fieldName}`] = fieldName;
   }
 
   const updateExpression = "set " + updateExpressions.join(", ");
@@ -132,6 +133,7 @@ export const update = (tableName: string, id: string, data: any) => {
     Key: { id },
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionsValues,
+    ExpressionAttributeNames: expressionsNames,
     ReturnValues: "ALL_NEW",
   };
 
