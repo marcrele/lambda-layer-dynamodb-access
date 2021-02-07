@@ -1,4 +1,4 @@
-import * as AWS from "aws-sdk";
+import AWS from "aws-sdk";
 import * as _ from "lodash";
 
 const DEFAULT_LIMIT = 15;
