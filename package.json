@@ -12,6 +12,9 @@
     "type": "git",
     "url": "https://github.com/marcrele/lambda-layer-dynamodb-access"
   },
+  "files": [
+    "lib/**/*"
+  ],
   "devDependencies": {
     "@serverless/typescript": "^2.22.0",
     "@types/aws-lambda": "^8.10.70",

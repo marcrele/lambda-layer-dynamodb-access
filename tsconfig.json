@@ -5,7 +5,7 @@
     "removeComments": true,
     "esModuleInterop":true,
     "target": "ES2015",
-    "outDir": "./dist"
+    "outDir": "./lib"
   },
   "include": ["src/**/*.ts"],
   "exclude": [
