@@ -4,6 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
+    "prepare": "npm run build",
     "build-sls": "npm i && tsc && npm run copy",
     "copy": "copyfiles -f src/main/package.json dynamodb_access_layer/node_modules/dynamodb_access && cd dynamodb_access_layer/node_modules/dynamodb_access && npm i",
     "test": "jest"
