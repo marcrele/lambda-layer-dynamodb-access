@@ -2,6 +2,7 @@
 jspm_packages
 node_modules
 dynamodb_access_layer
+dist
 
 # Serverless directories
 .serverless

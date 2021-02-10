@@ -1,11 +1,16 @@
 {
   "name": "lambda-layer-dynamodb-access-project",
   "version": "1.0.0",
-  "main": "src/main/nodejs/index.ts",
+  "main": "index.js",
   "scripts": {
-    "build": "npm ci && tsc && npm run copy",
+    "build": "tsc",
+    "build-sls": "npm i && tsc && npm run copy",
     "copy": "copyfiles -f src/main/package.json dynamodb_access_layer/node_modules/dynamodb_access && cd dynamodb_access_layer/node_modules/dynamodb_access && npm i",
     "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/marcrele/lambda-layer-dynamodb-access"
   },
   "devDependencies": {
     "@serverless/typescript": "^2.22.0",
