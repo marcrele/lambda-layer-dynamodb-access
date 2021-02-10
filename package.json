@@ -5,8 +5,7 @@
   "scripts": {
     "build": "tsc",
     "prepare": "npm run build",
-    "build-sls": "npm i && tsc && npm run copy",
-    "copy": "copyfiles -f src/main/package.json dynamodb_access_layer/node_modules/dynamodb_access && cd dynamodb_access_layer/node_modules/dynamodb_access && npm i",
+    "build-sls": "./build-sls.sh",
     "test": "jest"
   },
   "repository": {
@@ -24,7 +23,6 @@
     "@types/node": "^14.14.25",
     "@types/serverless": "^1.78.12",
     "aws-sdk": "^2.836.0",
-    "copyfiles": "^2.4.1",
     "fork-ts-checker-webpack-plugin": "^6.1.0",
     "jest": "26.4.2",
     "jest-dynalite": "^3.2.3",
