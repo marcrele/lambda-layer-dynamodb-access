@@ -25,13 +25,13 @@ const docClient = new AWS.DynamoDB.DocumentClient(config);
 export const insertOrReplace = (tableName: string, item: any) =>
   docClient.put({ TableName: tableName, Item: item }).promise();
 
-export const find = (tableName: string, id: string) => {
-  if (id == undefined || id === null) {
+export const find = (tableName: string, key: any) => {
+  if (key == undefined || key === null) {
     return new Promise((resolve, _) => resolve([]));
   }
 
   const params = {
-    Key: { id },
+    Key: key,
     TableName: tableName,
   };
 
@@ -41,14 +41,9 @@ export const find = (tableName: string, id: string) => {
     .then((result: any) => (_.isEmpty(result) ? null : result.Item));
 };
 
-export const getWhereIdIn = (tableName: string, ids: Array<string>) => {
-  if (ids == undefined || ids.length === 0) {
+export const getWhereIdIn = (tableName: string, keys: Array<any>) => {
+  if (keys == undefined || keys.length === 0) {
     return new Promise((resolve, _) => resolve([]));
-  }
-
-  const keys = [];
-  for (const id of ids) {
-    keys.push({ id });
   }
 
   const params = { RequestItems: { [tableName]: { Keys: keys } } };
@@ -69,7 +64,7 @@ export const getWhereIdIn = (tableName: string, ids: Array<string>) => {
 export const list = (
   tableName: string,
   limit?: number,
-  nextToken?: string,
+  nextToken?: any,
   projectionExpression?: string
 ) => {
   if (!limit) {
@@ -81,7 +76,7 @@ export const list = (
     TableName: tableName,
   };
   if (nextToken) {
-    params.ExclusiveStartKey = { id: nextToken };
+    params.ExclusiveStartKey = nextToken;
   }
   if (projectionExpression) {
     params.ProjectionExpression = projectionExpression;
@@ -115,10 +110,12 @@ export const query = (
     .then((result: any) => result.Items);
 };
 
-export const update = (tableName: string, id: string, data: any) => {
+export const update = (tableName: string, key: any, data: any) => {
   const updateExpressions = [];
-  const expressionsValues: AWS.DynamoDB.DocumentClient.ExpressionAttributeValueMap = {};
-  const expressionsNames: AWS.DynamoDB.DocumentClient.ExpressionAttributeNameMap = {};
+  const expressionsValues: AWS.DynamoDB.DocumentClient.ExpressionAttributeValueMap =
+    {};
+  const expressionsNames: AWS.DynamoDB.DocumentClient.ExpressionAttributeNameMap =
+    {};
 
   for (const fieldName of Object.keys(data)) {
     const fieldValue = data[fieldName];
@@ -130,7 +127,7 @@ export const update = (tableName: string, id: string, data: any) => {
   const updateExpression = "set " + updateExpressions.join(", ");
   const params = {
     TableName: tableName,
-    Key: { id },
+    Key: key,
     UpdateExpression: updateExpression,
     ExpressionAttributeValues: expressionsValues,
     ExpressionAttributeNames: expressionsNames,
@@ -145,10 +142,10 @@ export const update = (tableName: string, id: string, data: any) => {
     }));
 };
 
-export const remove = (tableName: string, id: string) => {
+export const remove = (tableName: string, key: any) => {
   const params = {
     TableName: tableName,
-    Key: { id },
+    Key: key,
   };
 
   return docClient.delete(params).promise();

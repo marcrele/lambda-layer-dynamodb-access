@@ -26,6 +26,7 @@ const serverlessConfiguration: AWS = {
   layers: {
     LayerDynamoDB: {
       path: "dynamodb_access_layer",
+      compatibleRuntimes: ["nodejs12.x"],
     },
   },
 };

@@ -9,7 +9,7 @@ describe("todos", () => {
       hello: "world",
     });
 
-    const item = await dynamodb.find("todos", "123");
+    const item = await dynamodb.find("todos", { id: "123" });
 
     expect(item).toEqual({
       id: "123",
@@ -20,13 +20,17 @@ describe("todos", () => {
   });
 
   it("should uptate the first item", async () => {
-    await dynamodb.update("todos", "111", {
-      other: "222",
-      name: "updated todo",
-      hello: "first",
-    });
+    await dynamodb.update(
+      "todos",
+      { id: "111" },
+      {
+        other: "222",
+        name: "updated todo",
+        hello: "first",
+      }
+    );
 
-    const item = await dynamodb.find("todos", "111");
+    const item = await dynamodb.find("todos", { id: "111" });
 
     expect(item).toEqual({
       id: "111",
