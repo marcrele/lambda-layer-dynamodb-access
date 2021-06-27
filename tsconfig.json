@@ -5,7 +5,7 @@
     "removeComments": true,
     "esModuleInterop":true,
     "target": "ES2015",
-    "outDir": "./dynamodb_access_layer/node_modules/dynamodb_access"
+    "outDir": "./lib"
   },
   "include": ["src/**/*.ts"],
   "exclude": [
