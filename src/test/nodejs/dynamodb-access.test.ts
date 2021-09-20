@@ -37,6 +37,29 @@ describe("todos", () => {
       other: "222",
       name: "updated todo",
       hello: "first",
+      toRemove: "remove me"
+    });
+  });
+
+  it("should remove a field of the first item", async () => {
+    await dynamodb.update(
+      "todos",
+      { id: "111" },
+      {
+        other: "222",
+        name: "updated todo",
+        hello: "first",
+        toRemove: null
+      }
+    );
+
+    const item = await dynamodb.find("todos", { id: "111" });
+
+    expect(item).toEqual({
+      id: "111",
+      other: "222",
+      name: "updated todo",
+      hello: "first",
     });
   });
 });

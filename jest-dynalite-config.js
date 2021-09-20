@@ -29,6 +29,7 @@ module.exports = {
       other: "222",
       name: "first todo",
       hello: "first",
+      toRemove: "remove me"
     }]
   }],
   basePort: 8000

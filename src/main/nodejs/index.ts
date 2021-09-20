@@ -26,7 +26,7 @@ export const insertOrReplace = (tableName: string, item: any) =>
   docClient.put({ TableName: tableName, Item: item }).promise();
 
 export const find = (tableName: string, key: any) => {
-  if (key == undefined || key === null) {
+  if ( key == undefined ) {
     return new Promise((resolve, _) => resolve([]));
   }
 
@@ -42,7 +42,7 @@ export const find = (tableName: string, key: any) => {
 };
 
 export const getWhereIdIn = (tableName: string, keys: Array<any>) => {
-  if (keys == undefined || keys.length === 0) {
+  if ( keys == undefined || keys.length === 0 ) {
     return new Promise((resolve, _) => resolve([]));
   }
 
@@ -54,7 +54,7 @@ export const getWhereIdIn = (tableName: string, keys: Array<any>) => {
     .promise()
     .then((result: any) => {
       let items;
-      if (result.Responses) {
+      if ( result.Responses ) {
         items = result.Responses[tableName];
       }
       return _.isEmpty(items) ? [] : items;
@@ -67,7 +67,7 @@ export const list = (
   nextToken?: any,
   projectionExpression?: string
 ) => {
-  if (!limit) {
+  if ( !limit ) {
     limit = DEFAULT_LIMIT;
   }
 
@@ -75,10 +75,10 @@ export const list = (
     Limit: limit,
     TableName: tableName,
   };
-  if (nextToken) {
+  if ( nextToken ) {
     params.ExclusiveStartKey = nextToken;
   }
-  if (projectionExpression) {
+  if ( projectionExpression ) {
     params.ProjectionExpression = projectionExpression;
   }
 
@@ -110,36 +110,57 @@ export const query = (
     .then((result: any) => result.Items);
 };
 
-export const update = (tableName: string, key: any, data: any) => {
-  const updateExpressions = [];
-  const expressionsValues: AWS.DynamoDB.DocumentClient.ExpressionAttributeValueMap =
-    {};
-  const expressionsNames: AWS.DynamoDB.DocumentClient.ExpressionAttributeNameMap =
-    {};
+export const update = async (tableName: string, key: any, data: any) => {
+  const setExpressions = [];
+  const setExpressionsValues: AWS.DynamoDB.DocumentClient.ExpressionAttributeValueMap = {};
+  const setExpressionsNames: AWS.DynamoDB.DocumentClient.ExpressionAttributeNameMap = {};
 
-  for (const fieldName of Object.keys(data)) {
+  const removeExpressions = [];
+
+  for ( const fieldName of Object.keys(data) ) {
     const fieldValue = data[fieldName];
-    updateExpressions.push(`#${fieldName} = :${fieldName}`);
-    expressionsValues[`:${fieldName}`] = fieldValue;
-    expressionsNames[`#${fieldName}`] = fieldName;
+    if ( fieldValue ) {
+      setExpressions.push(`#${fieldName} = :${fieldName}`);
+      setExpressionsValues[`:${fieldName}`] = fieldValue;
+      setExpressionsNames[`#${fieldName}`] = fieldName;
+    } else {
+      removeExpressions.push(`${fieldName}`);
+    }
   }
 
-  const updateExpression = "set " + updateExpressions.join(", ");
-  const params = {
-    TableName: tableName,
-    Key: key,
-    UpdateExpression: updateExpression,
-    ExpressionAttributeValues: expressionsValues,
-    ExpressionAttributeNames: expressionsNames,
-    ReturnValues: "ALL_NEW",
-  };
+  let result = find(tableName, key);
 
-  return docClient
-    .update(params)
-    .promise()
-    .then((result: any) => ({
-      ...result.Attributes,
-    }));
+  if ( setExpressions.length > 0 ) {
+    const setExpression = "set " + setExpressions.join(", ");
+    const params = {
+      TableName: tableName,
+      Key: key,
+      UpdateExpression: setExpression,
+      ExpressionAttributeValues: setExpressionsValues,
+      ExpressionAttributeNames: setExpressionsNames,
+      ReturnValues: "ALL_NEW",
+    };
+    result = await docClient
+      .update(params)
+      .promise()
+      .then((result: any) => ({ ...result.Attributes, }));
+  }
+
+  if(removeExpressions.length > 0) {
+    const removeExpression = "remove " + removeExpressions.join(", ");
+    const params = {
+      TableName: tableName,
+      Key: key,
+      UpdateExpression: removeExpression,
+      ReturnValues: "ALL_NEW",
+    };
+    result = await docClient
+      .update(params)
+      .promise()
+      .then((result: any) => ({ ...result.Attributes, }));
+  }
+
+  return result
 };
 
 export const remove = (tableName: string, key: any) => {
