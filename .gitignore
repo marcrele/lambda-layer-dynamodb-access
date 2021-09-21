@@ -9,3 +9,6 @@ lib
 
 # Webpack directories
 .webpack
+
+# IntelliJ
+.idea
