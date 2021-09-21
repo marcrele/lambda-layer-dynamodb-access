@@ -95,19 +95,33 @@ export const query = (
   tableName: string,
   indexName: string,
   attrName: string,
-  attrValue: any
+  attrValue: any,
+  limit?: number,
+  nextToken?: any,
 ) => {
-  const params = {
+  if ( !limit ) {
+    limit = DEFAULT_LIMIT;
+  }
+
+  const params: AWS.DynamoDB.DocumentClient.QueryInput = {
     TableName: tableName,
     IndexName: indexName,
     KeyConditionExpression: `${attrName} = :hkey`,
     ExpressionAttributeValues: { ":hkey": attrValue },
+    Limit: limit,
   };
+
+  if ( nextToken ) {
+    params.ExclusiveStartKey = nextToken;
+  }
 
   return docClient
     .query(params)
     .promise()
-    .then((result: any) => result.Items);
+    .then((result: any) => ({
+      nextToken: result.LastEvaluatedKey ? result.LastEvaluatedKey.id : null,
+      items: result.Items,
+    }));
 };
 
 export const update = async (tableName: string, key: any, data: any) => {
@@ -146,7 +160,7 @@ export const update = async (tableName: string, key: any, data: any) => {
       .then((result: any) => ({ ...result.Attributes, }));
   }
 
-  if(removeExpressions.length > 0) {
+  if ( removeExpressions.length > 0 ) {
     const removeExpression = "remove " + removeExpressions.join(", ");
     const params = {
       TableName: tableName,
