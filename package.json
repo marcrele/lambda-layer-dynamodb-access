@@ -1,6 +1,6 @@
 {
   "name": "lambda-layer-dynamodb-access-project",
-  "version": "1.0.2",
+  "version": "1.12.0",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
